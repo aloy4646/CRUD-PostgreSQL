@@ -1,0 +1,18 @@
+<h1>Detail Contact</h1>
+<div class="card" style="width: 18rem;">
+    <div class="card-body">
+        <h5 class="card-title"><%= contact.name %></h5>
+        <% if (contact.email) { %>
+            <h6 class="card-subtitle mb-2 text-muted"><%= contact.email %></h6>
+        <% } %>
+        <p class="card-text"><%= contact.mobile %></p>
+        <div style="display: flex;">
+            <form method="POST" action="/contact/form?oldName=<%= contact.name %>">
+                <button type="submit" class="btn btn-link" style="padding: 0px; margin-left: 0px;">Edit</button>
+            </form>
+            <form method="POST" action="/contact/<%= contact.name %>?_method=DELETE">
+                <button type="submit" class="btn btn-link" style="padding: 0px; margin-left: 20px;">Delete</button>
+            </form>
+        </div>
+    </div>
+</div>

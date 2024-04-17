@@ -1,0 +1,35 @@
+<!-- pop-up keterangan error jika ada -->
+<!-- berisi pesanError dari hasil validasi -->
+<script>
+    if ("<%= pesanError %>" !== "") {
+        window.onload = function() {
+            alert("<%= pesanError %>");
+        };
+    }
+</script>
+
+<h2>Form</h2>
+<!-- Form akan terisi oleh nilai lama dari contact jika method dari request adalah Update -->
+
+<form action="<%= request === "PUT" ? "/contact?_method=PUT" : "/contact" %>" method="POST">
+
+    <label for="name">Name</label><br>
+    <!-- value kosong saat request POST pertama dilakukan -->
+    <input type="text" id="name" name="name" value="<%= contact ? contact.name : "" %>" required><br><br>
+    
+    <label for="email">Email</label><br>
+    <input type="email" id="email" name="email" value="<%= contact && contact.email ? contact.email : "" %>"><br><br>
+
+    <label for="mobile">Mobile</label><br>
+    <input type="tel" id="mobile" name="mobile" value="<%= contact ? contact.mobile : "" %>" required><br><br>
+    
+    <button type="submit">Submit</button>
+
+    <!-- menambahkan input oldName saat PUT namun di-hidden agar tidak dapat dirubah oleh user -->
+    <!-- oldName akan dipakai nantinya untuk proses perubahan data sebagai key untuk pencarian -->
+    <% if (request === "PUT") { %>
+        <label for="oldName" hidden>Old Name:</label><br>
+        <input type="text" id="oldName" name="oldName" value="<%= oldName %>" hidden><br><br>
+    <% } %>
+</form>
+
