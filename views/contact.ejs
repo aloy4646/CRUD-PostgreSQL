@@ -1,40 +1,48 @@
-<h2>This is contact page</h2>
+<div style="margin-left: 10px;">
+    <h2>This is contact page</h2>
 
-<form method="POST" action="/contact/form">
-    <button type="submit">Add Contact</button>
-</form>
-<br>
+    <form method="POST" action="/contact/form">
+        <button type="submit">Add Contact</button>
+    </form>
+    <br>
 
-<% if (contacts.length < 1) { %>
-    <p>Contact data is Empty</p>
-<% } else { %>
-    <% var counter = 1 %>
-    <table class="table table-striped" style="text-align: center;">
-        <tr>
-            <th>#</th>
-            <th>Nama</th>
-            <th>Mobile</th>
-            <th>Action</th>
-        </tr>
-    <% contacts.forEach(contact => { %>
+    <% if (contacts.length < 1) { %>
+        <p>Contact data is Empty</p>
+    <% } else { %>
+        <% var counter = 1 %>
+        <table class="table table-striped" style="text-align: center;">
             <tr>
-                    <td><%= counter++ %></td>
-                    <td><%= contact.name %></td>
-                    <td><%= contact.mobile %></td>
-                    <td colspan="2">
-                        <form method="GET" action="/contact/<%= contact.name %>" style="display: inline;">
-                            <button type="submit" class="btn btn-info">Detail</button>
-                        </form>
+                <th>#</th>
+                <th>Nama</th>
+                <th>Mobile</th>
+                <th>Action</th>
+            </tr>
+        <% contacts.forEach(contact => { %>
+                <tr>
+                        <td><%= counter++ %></td>
+                        <td><%= contact.name %></td>
+                        <td><%= contact.mobile %></td>
+                        <td colspan="2">
+                            <form method="GET" action="/contact/<%= contact.name %>" style="display: inline;">
+                                <button type="submit" class="btn btn-info">Detail</button>
+                            </form>
 
-                        <form method="POST" action="/contact/form?oldName=<%= contact.name %>" style="display: inline;">
-                            <button type="submit" class="btn btn-secondary">Edit</button>
-                        </form>
+                            <form method="POST" action="/contact/form?oldName=<%= contact.name %>" style="display: inline;">
+                                <button type="submit" class="btn btn-secondary">Edit</button>
+                            </form>
 
-                        <form method="POST" action="/contact/<%= contact.name %>?_method=DELETE" style="display: inline;">
-                            <button type="submit" class="btn btn-danger">Delete</button>
-                        </form> 
-                    </td>
-                </tr>
-    <% }) %>
-    </table>      
-<% } %>
+                            <form method="POST" action="/contact/<%= contact.name %>?_method=DELETE" style="display: inline;" onsubmit="return confirmDelete()">
+                                <button type="submit" class="btn btn-danger">Delete</button>
+                            </form> 
+                        </td>
+                    </tr>
+        <% }) %>
+        </table>      
+    <% } %>
+</div>
+
+<script>
+    function confirmDelete() {
+        return confirm("Apakah anda yakin untuk menghapus contact ini?");
+    }
+</script>

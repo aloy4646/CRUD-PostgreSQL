@@ -8,28 +8,34 @@
     }
 </script>
 
-<h2>Form</h2>
-<!-- Form akan terisi oleh nilai lama dari contact jika method dari request adalah Update -->
+<div style="margin-left: 10px;">
+    <h2>Form</h2>
+    <!-- Form akan terisi oleh nilai lama dari contact jika method dari request adalah Update -->
 
-<form action="<%= request === "PUT" ? "/contact?_method=PUT" : "/contact" %>" method="POST">
+    <form action="<%= request === "PUT" ? "/contact?_method=PUT" : "/contact" %>" method="POST">
+        <div class="mb-3">
+            <label for="name" class="form-label">Name <span style="color: red">*</span></label>
+            <!-- value kosong saat request POST pertama dilakukan -->
+            <input type="text" id="name" name="name" class="form-control" style="width: 30%;" value="<%= contact ? contact.name : "" %>" required>
+        </div>
 
-    <label for="name">Name</label><br>
-    <!-- value kosong saat request POST pertama dilakukan -->
-    <input type="text" id="name" name="name" value="<%= contact ? contact.name : "" %>" required><br><br>
-    
-    <label for="email">Email</label><br>
-    <input type="email" id="email" name="email" value="<%= contact && contact.email ? contact.email : "" %>"><br><br>
+        <div class="mb-3">
+            <label for="email" class="form-label">Email</label>
+            <input type="email" id="email" name="email" class="form-control" style="width: 30%;" value="<%= contact && contact.email ? contact.email : "" %>">
+        </div>
 
-    <label for="mobile">Mobile</label><br>
-    <input type="tel" id="mobile" name="mobile" value="<%= contact ? contact.mobile : "" %>" required><br><br>
-    
-    <button type="submit">Submit</button>
+        <div class="mb-3">
+            <label for="mobile" class="form-label">Mobile <span style="color: red">*</span></label>
+            <input type="tel" id="mobile" name="mobile" class="form-control col-6" style="width: 30%;" value="<%= contact ? contact.mobile : "" %>" required>
+        </div>
 
-    <!-- menambahkan input oldName saat PUT namun di-hidden agar tidak dapat dirubah oleh user -->
-    <!-- oldName akan dipakai nantinya untuk proses perubahan data sebagai key untuk pencarian -->
-    <% if (request === "PUT") { %>
-        <label for="oldName" hidden>Old Name:</label><br>
-        <input type="text" id="oldName" name="oldName" value="<%= oldName %>" hidden><br><br>
-    <% } %>
-</form>
+        <button type="submit" class="btn btn-primary">Submit</button>
 
+        <!-- menambahkan input oldName saat PUT namun di-hidden agar tidak dapat dirubah oleh user -->
+        <!-- oldName akan dipakai nantinya untuk proses perubahan data sebagai key untuk pencarian -->
+        <% if (request === "PUT") { %>
+            <label for="oldName" hidden>Old Name:</label><br>
+            <input type="text" id="oldName" name="oldName" value="<%= oldName %>" hidden><br><br>
+        <% } %>
+    </form>
+</div>

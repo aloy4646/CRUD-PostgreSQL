@@ -1,13 +1,15 @@
-<h1>Submit</h1>
-<p>Nama: <%= newContact.name %></p>
-<% if (newContact.email) { %>
-    <p>Email: <%= newContact.email %></p>
-<% } %>
-<p>Mobile: <%= newContact.mobile %></p>
+<div style="margin-left: 10px;">
+    <h1>Submit</h1>
+    <p>Nama: <%= newContact.name %></p>
+    <% if (newContact.email) { %>
+        <p>Email: <%= newContact.email %></p>
+    <% } %>
+    <p>Mobile: <%= newContact.mobile %></p>
 
-<% if (request === "POST") { %>
-    <p>Proses insert berhasil</p>
-<% } else { %>
-    <p>Proses update berhasil</p>
-<% } %>
+    <% if (request === "POST") { %>
+        <p>Proses insert berhasil</p>
+    <% } else { %>
+        <p>Proses update berhasil</p>
+    <% } %>
+</div>
 
