@@ -1,19 +1,6 @@
 const validator = require('validator')
-const fs = require("fs")
 
 const db = require('./db.js')
-
-//membuat folder data jika belum ada
-const dirPath = './data'
-if(!fs.existsSync(dirPath)){
-    fs.mkdirSync(dirPath)
-}
-
-//membuat file contacts.json jika belum ada
-const dataPath = dirPath + "/contacts.json"
-if(!fs.existsSync(dataPath)){
-    fs.writeFileSync(dataPath, '[]', 'utf-8')
-}
 
 const deleteContact = async (name) => {
     try {
