@@ -4,9 +4,7 @@ const db = require('./db.js')
 
 const deleteContact = async (name) => {
     try {
-        const client = await db.connect()
-        const result = await client.query('DELETE FROM contacts WHERE name = $1', [name])
-        client.release()
+        const result = await db.query('DELETE FROM contacts WHERE name = $1', [name])
 
         if (result.rowCount === 0) {
             return -1
@@ -49,9 +47,7 @@ const validasi = async (newContact, namaBerubah) => {
 
 const getContact = async (name) => {
     try {
-        const client = await db.connect()
-        const result = await client.query('SELECT * FROM contacts WHERE name = $1', [name])
-        client.release()
+        const result = await db.query('SELECT * FROM contacts WHERE name = $1', [name])
         if (result.rows.length === 0) {
             return null
         }
@@ -64,9 +60,7 @@ const getContact = async (name) => {
 
 const getContacts = async () => {
     try {
-        const client = await db.connect()
-        const result = await client.query('SELECT name, mobile FROM contacts')
-        client.release()
+        const result = await db.query('SELECT name, mobile FROM contacts')
         return result.rows
     } catch (error) {
         console.error('Error fetching contacts:', error)
@@ -79,9 +73,7 @@ const saveContact = async (newContact) => {
     let emailValue = newContact.email || ''
 
     try {
-        const client = await db.connect()
-        const result = await client.query('INSERT INTO contacts (name, email, mobile) VALUES ($1, $2, $3)', [newContact.name, emailValue, newContact.mobile])
-        client.release()
+        const result = await db.query('INSERT INTO contacts (name, email, mobile) VALUES ($1, $2, $3)', [newContact.name, emailValue, newContact.mobile])
         return result
     } catch (error) {
         console.error('Error fetching contacts:', error)
@@ -94,9 +86,7 @@ const updateContact = async (oldName, newContact) => {
     let emailValue = newContact.email || ''
 
     try {
-        const client = await db.connect()
-        const result = await client.query('UPDATE contacts SET name = $1, email = $2, mobile = $3 WHERE name = $4', [newContact.name, emailValue, newContact.mobile, oldName])
-        client.release()
+        const result = await db.query('UPDATE contacts SET name = $1, email = $2, mobile = $3 WHERE name = $4', [newContact.name, emailValue, newContact.mobile, oldName])
         return result
     } catch (error) {
         console.error('Error fetching contacts:', error)
