@@ -29,7 +29,6 @@ app.use(bodyParser.json())
 
 app.use(express.static('public'))
 
-
 //index
 app.get('/', (req, res) => {
     res.render('index', 
@@ -50,91 +49,143 @@ app.get('/about', (req, res) => {
 
 //Form
 app.post('/contact/form', async (req, res) => {
-    //jika edit contact maka akan ada oldName yang dapat diquery
-    const oldName = req.query.oldName
-    var request = "POST"
-    var contact = null
-
-    //jika oldName ada maka akan dilakukan Update
-    if(oldName){
-        contact = await controller.getContact(oldName)
-        request = "PUT"
+    try{
+        //jika edit contact maka akan ada oldName yang dapat diquery
+        const oldName = req.query.oldName
+        var request = "POST"
+        var contact = null
+    
+        //jika oldName ada maka akan dilakukan Update
+        if(oldName){
+            contact = await controller.getContact(oldName)
+            request = "PUT"
+        }
+    
+        //pesan error dipakai untuk menampilkan pop-up error, namun disini akan dikosongkan []
+        //app.post('/contact/form'... hanya dipanggil saat form pertama kali dipanggil saja
+        //jika ada error pada pengisian form nantinya, maka masing-masing route (put dan post) akan merender form.ejs secara langsung
+        renderForm(res, oldName, contact, request, [])
+    }catch (error){
+        var deskripsiError = 'Error generating form'
+        console.error(`${deskripsiError}: ${error}`)
+        renderError(res, deskripsiError)
     }
-
-    //pesan error dipakai untuk menampilkan pop-up error, namun disini akan dikosongkan []
-    //app.post('/contact/form'... hanya dipanggil saat form pertama kali dipanggil saja
-    //jika ada error pada pengisian form nantinya, maka masing-masing route (put dan post) akan merender form.ejs secara langsung
-    renderForm(res, oldName, contact, request, [])
 })
 
 //Create Contact
 app.post('/contact', async (req, res) => {
-    const newContact = {"name": req.body.name, "mobile": req.body.mobile, "email": req.body.email}
-
-    //namaBerubah digunakaan saat pengecekan duplikat
-    var namaBerubah = true
-    var pesanError = await controller.validasi(newContact, namaBerubah)
-
-    if(pesanError.length > 0){
-        renderForm(res, null, newContact, "POST", pesanError)
-        return
+    try{
+        const newContact = {"name": req.body.name, "mobile": req.body.mobile, "email": req.body.email}
+    
+        //namaBerubah digunakaan saat pengecekan duplikat
+        var namaBerubah = true
+        var pesanError = await controller.validasi(newContact, namaBerubah)
+    
+        if(pesanError.length > 0){
+            renderForm(res, null, newContact, "POST", pesanError)
+            return
+        }
+    
+        controller.saveContact(newContact)
+    
+        res.render('submit',
+        {
+            title: "Submit",
+            newContact,
+            request: "POST"
+        })  
+    }catch (error){
+        var deskripsiError = 'Error creating contact'
+        console.error(`${deskripsiError}: ${error}`)
+        renderError(res, deskripsiError)
     }
-
-    controller.saveContact(newContact)
-
-    res.render('submit',
-    {
-        title: "Submit",
-        newContact,
-        request: "POST"
-    })
 })
 
 //Read List Contact
 app.get('/contact', async (req, res) => {
-    const contacts = await controller.getContacts()
-    res.render('contact', 
-    {
-        title: "Contact", 
-        contacts
-    })
+    try{
+        const contacts = await controller.getContacts()
+        res.render('contact', 
+        {
+            title: "Contact", 
+            contacts
+        })
+    }catch (error){
+        var deskripsiError = 'Error getting list contact'
+        console.error(`${deskripsiError}: ${error}`)
+        renderError(res, deskripsiError)
+    }
 })
 
 //Read Detail Contact
 app.get('/contact/:name', async (req, res) => {
-    const contact = await controller.getContact(req.params.name)
-    res.render('detailContact', 
-    {
-        title: "Detail Contact",
-        contact
-    })
+    try{
+        const contact = await controller.getContact(req.params.name)
+        res.render('detailContact', 
+        {
+            title: "Detail Contact",
+            contact
+        })
+    }catch (error){
+        var deskripsiError = 'Error getting contact'
+        console.error(`${deskripsiError}: ${error}`)
+        renderError(res, deskripsiError)
+    }
 })
 
 //Update Contact
 app.put('/contact', async (req, res) => {
-    const oldContact = await controller.getContact(req.body.oldName)
-    const newContact = {"name": req.body.name, "mobile": req.body.mobile, "email": req.body.email}
-
-    //saya membolehkan nama tidak berubah saat update
-    var namaBerubah = true
-    if(oldContact.name === newContact.name) namaBerubah = false
-
-    //validasi, jika ada error langsung redirect ke error page
-    var pesanError = await controller.validasi(newContact, namaBerubah)
-
-    if(pesanError.length > 0){
-        renderForm(res, oldContact.name, newContact, "PUT", pesanError)
-        return
+    try{
+        const oldContact = await controller.getContact(req.body.oldName)
+        const newContact = {"name": req.body.name, "mobile": req.body.mobile, "email": req.body.email}
+    
+        //saya membolehkan nama tidak berubah saat update
+        var namaBerubah = true
+        if(oldContact.name === newContact.name) namaBerubah = false
+    
+        //validasi, jika ada error langsung redirect ke error page
+        var pesanError = await controller.validasi(newContact, namaBerubah)
+    
+        if(pesanError.length > 0){
+            renderForm(res, oldContact.name, newContact, "PUT", pesanError)
+            return
+        }
+    
+        controller.updateContact(req.body.oldName, newContact)
+    
+        res.render('submit',
+        {
+            title: "Submit",
+            newContact,
+            request: "PUT"
+        })
+    }catch (error){
+        var deskripsiError = 'Error updating contact'
+        console.error(`${deskripsiError}: ${error}`)
+        renderError(res, deskripsiError)
     }
+})
 
-    controller.updateContact(req.body.oldName, newContact)
-
-    res.render('submit',
-    {
-        title: "Submit",
-        newContact,
-        request: "PUT"
-    })
+//Delete Contact
+app.delete('/contact/:name', async (req, res) => {
+    try{
+        const rowDeleted = await controller.deleteContact(req.params.name)
+        var berhasil = true
+    
+        if (rowDeleted === -1) berhasil = false
+    
+        res.render('deleteContact', 
+        {
+            title: "Delete Contact",
+            name: req.params.name,
+            berhasil
+        })
+    }catch (error){
+        var deskripsiError = 'Error deleting contact'
+        console.error(`${deskripsiError}: ${error}`)
+        renderError(res, deskripsiError)
+    }
+    
 })
 
 const renderForm = (res, oldName, contact, request, pesanError) => {
@@ -151,20 +202,16 @@ const renderForm = (res, oldName, contact, request, pesanError) => {
     })
 }
 
-//Delete Contact
-app.delete('/contact/:name', async (req, res) => {
-    const rowDeleted = await controller.deleteContact(req.params.name)
-    var berhasil = true
-
-    if (rowDeleted === -1) berhasil = false
-
-    res.render('deleteContact', 
+const renderError = (res, deskripsiError) => {
+    res.status(500)
+    res.render('errorPage', 
     {
-        title: "Delete Contact",
-        name: req.params.name,
-        berhasil
+        title: "Error Page", 
+        statusCode: 500,
+        errorMessage: "Internal Server Error",
+        deskripsiError
     })
-})
+}
 
 app.use('/', (req, res) => {
     res.status(404)
