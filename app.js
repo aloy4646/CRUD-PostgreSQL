@@ -86,7 +86,7 @@ app.post('/contact', async (req, res) => {
             return
         }
     
-        controller.saveContact(newContact)
+        await controller.saveContact(newContact)
     
         res.render('submit',
         {
@@ -151,7 +151,7 @@ app.put('/contact', async (req, res) => {
             return
         }
     
-        controller.updateContact(req.body.oldName, newContact)
+        await controller.updateContact(req.body.oldName, newContact)
     
         res.render('submit',
         {
