@@ -1,4 +1,4 @@
-# GeeksFarm Bootcamp 17 April 2024
+# GeeksFarm Bootcamp 17-19 April 2024
 Project membuat CRUD (Create, Read, Update, Delete) contact menggunakan database ProgreSQL
 
 Sequence diagram dapat dilihat pada folder "sequence_diagram"
