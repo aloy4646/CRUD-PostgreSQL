@@ -31,7 +31,7 @@
                                 <button type="submit" class="btn btn-secondary">Edit</button>
                             </form>
 
-                            <form method="POST" action="/contact/<%= contact.name %>?_method=DELETE" style="display: inline;" onsubmit="return confirmDelete()">
+                            <form method="POST" action="/contact/<%= contact.name %>?_method=DELETE" style="display: inline;" onsubmit="return confirmDelete('<%= contact.name %>')">
                                 <button type="submit" class="btn btn-danger">Delete</button>
                             </form> 
                         </td>
@@ -41,8 +41,9 @@
     <% } %>
 </div>
 
+
 <script>
-    function confirmDelete() {
-        return confirm("Apakah anda yakin untuk menghapus contact ini?");
+    function confirmDelete(name) {
+        return confirm(`Apakah anda yakin untuk menghapus contact bernama ${name}?`);
     }
 </script>
