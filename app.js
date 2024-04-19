@@ -61,7 +61,7 @@ app.post('/contact/form', async (req, res) => {
         request = "PUT"
     }
 
-    //pesan error dipakai untuk menampilkan pop-up error, namun disini akan dikosongkan
+    //pesan error dipakai untuk menampilkan pop-up error, namun disini akan dikosongkan []
     //app.post('/contact/form'... hanya dipanggil saat form pertama kali dipanggil saja
     //jika ada error pada pengisian form nantinya, maka masing-masing route (put dan post) akan merender form.ejs secara langsung
     renderForm(res, oldName, contact, request, [])
@@ -103,7 +103,6 @@ app.get('/contact', async (req, res) => {
 //Read Detail Contact
 app.get('/contact/:name', async (req, res) => {
     const contact = await controller.getContact(req.params.name)
-    console.log(contact)
     res.render('detailContact', 
     {
         title: "Detail Contact",
@@ -140,11 +139,7 @@ app.put('/contact', async (req, res) => {
 
 const renderForm = (res, oldName, contact, request, pesanError) => {
     //mengubah array kedalam bentuk string
-    var stringPesanError = ""
-    pesanError.forEach(error => {
-        console.log(error)
-        stringPesanError += error + ", "
-    })
+    var stringPesanError = pesanError.join(", ")
 
     res.render('form',
     {
